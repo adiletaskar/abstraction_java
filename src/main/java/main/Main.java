@@ -1,6 +1,8 @@
 package main;
 
+import configuration.ProjectConfiguration;
 import models.Comment;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import proxies.CommentNotificationProxy;
 import proxies.EmailCommentNotificationProxy;
 import repositories.CommentRepository;
@@ -9,13 +11,11 @@ import services.CommentService;
 
 public class Main {
     public static void main(String[] args) {
-        CommentRepository commentRepository = new DBCommentRepository();
-        CommentNotificationProxy commentNotificationProxy = new EmailCommentNotificationProxy();
-        CommentService commentService = new CommentService(commentRepository,commentNotificationProxy);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ProjectConfiguration.class);
         Comment comment = new Comment();
         comment.setAuthor("Adilet");
         comment.setText("demo comment");
-
+        CommentService commentService = context.getBean(CommentService.class);
         commentService.publishComment(comment);
     }
 }
